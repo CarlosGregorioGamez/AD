@@ -1,26 +1,25 @@
 package Controllers;
 
-import Application.Usuarios;
-import Repositories.UsuariosRepository;
+import Entities.Usuario;
 import Services.UsuariosService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/usuarios")
 @RequiredArgsConstructor
 public class UsuariosController {
 
-    private final UsuariosService usuariosService;
+    @Autowired
+    private UsuariosService usuariosService;
 
-    @GetMapping("/usuarios/registrar")
-    public String crearUsuario(@RequestBody Usuarios usuario) {
-        return usuariosService.crearUsuario(usuario);
-
+    @PostMapping("/registrar")
+    public ResponseEntity<String> crearUsuario(@RequestBody Usuario usuario) {
+        usuariosService.crearUsuario(usuario);
+        String response = usuariosService.crearUsuario(usuario);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }

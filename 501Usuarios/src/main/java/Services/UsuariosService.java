@@ -1,18 +1,21 @@
 package Services;
 
-import Application.Usuarios;
+import Entities.Usuario;
 import Repositories.UsuariosRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class UsuariosService {
 
-    private final UsuariosRepository usuariosRepo;
+    @Autowired
+    private UsuariosRepository usuariosRepo;
 
-    public String crearUsuario(Usuarios usuario) {
+    public String crearUsuario(Usuario usuario) {
         try {
             usuariosRepo.save(usuario);
             return "Usuario añadido correctamente";
@@ -21,10 +24,10 @@ public class UsuariosService {
         }
     }
 
-    public String actualizarUsuario(Usuarios usuario) {
+    public String actualizarUsuario(Usuario usuario) {
         try {
-           usuariosRepo.findById(usuario.getUsuario_id());
-           usuariosRepo.save(usuario);
+            usuariosRepo.findById(usuario.getUsuario_id());
+            usuariosRepo.save(usuario);
             return "Se ha actualizado al usuario correectamente";
         } catch (Exception e) {
             return "Ha habido un fallo a la hora de actualizar el usuario";
@@ -33,7 +36,7 @@ public class UsuariosService {
 
     public String eliminarUsuario(String nombre, String contrasena) {
         try {
-            List<Usuarios> listaUsuarios = usuariosRepo.findAll();
+            List<Usuario> listaUsuarios = usuariosRepo.findAll();
             for (int i = 0; i < listaUsuarios.size(); i++) {
                 if (listaUsuarios.get(i).getNombre().equalsIgnoreCase(nombre) && listaUsuarios.get(i).getContrasena().equalsIgnoreCase(contrasena)) {
                     usuariosRepo.delete(listaUsuarios.get(i));
@@ -49,7 +52,7 @@ public class UsuariosService {
     public boolean validarUsuario(String nombre, String contrasena) {
         boolean comprobar = false;
         try {
-            List<Usuarios> listaUsuarios = usuariosRepo.findAll();
+            List<Usuario> listaUsuarios = usuariosRepo.findAll();
             for (int i = 0; i < listaUsuarios.size(); i++) {
                 if (listaUsuarios.get(i).getNombre().equalsIgnoreCase(nombre) && listaUsuarios.get(i).getContrasena().equalsIgnoreCase(contrasena)) {
                     comprobar = true;
@@ -71,6 +74,11 @@ public class UsuariosService {
     }
 
     public String obtenerInfoUsuarioPorNombre(String nombre) {
-        return null;
+        return usuariosRepo.idEmpleadosPorNombre(nombre);
+    }
+
+    public boolean checkIfExists(int id) {
+        return usuariosRepo.existsById(id);
     }
 }
+
