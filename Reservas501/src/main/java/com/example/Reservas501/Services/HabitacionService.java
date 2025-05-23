@@ -14,25 +14,18 @@ public class HabitacionService {
     @Autowired
     private HabitacionRepository repository;
     private DTOUsuarioContrasena dtoUsuarioContrasena;
-    private static final String URLvalidacion = "http://locahost:8502/usuarios/validar";
 
-    private boolean validarEnMicroServicioUsuarios(DTOUsuarioContrasena usuarioContraseña){
-        RestTemplate restTemplate = new RestTemplate();
-        DTOUsuarioContrasena usuario = dtoUsuarioContrasena.builder()
-                .nombre(usuarioContraseña.getNombre())
-                .contrasena(usuarioContraseña.getContrasena())
-                .build();
-        ResponseEntity<Boolean> response = restTemplate.postForEntity(URLvalidacion, usuario, Boolean.class);
-        return Boolean.TRUE.equals(response.getBody());
-    }
-
-    public String crearHabitacion(Habitacion habitacion){
-        Habitacion crearHabitacion = new Habitacion(
-                habitacion.getHabitacion_id(),
-                habitacion.getTipo(),
-                habitacion.getPrecio(),
-                habitacion.getHotel_id());
-        repository.save(crearHabitacion);
-        return "Habitación creada con éxito";
+    public String crearHabitacion(Habitacion habitacion) {
+        try {
+            Habitacion crearHabitacion = new Habitacion(
+                    habitacion.getHabitacion_id(),
+                    habitacion.getTipo(),
+                    habitacion.getPrecio(),
+                    habitacion.getHotel_id());
+            repository.save(crearHabitacion);
+            return "Habitación creada con éxito";
+        } catch (Exception e) {
+            return "Ha habido un problema con la creación de la habitación";
+        }
     }
 }
