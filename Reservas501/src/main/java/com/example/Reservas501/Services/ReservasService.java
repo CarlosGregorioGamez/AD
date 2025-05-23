@@ -1,11 +1,14 @@
 package com.example.Reservas501.Services;
 
+import com.example.Reservas501.DTO.DTOReservaSimple;
 import com.example.Reservas501.DTO.DTOUsuarioContrasena;
 import com.example.Reservas501.Entities.Hotel;
+import com.example.Reservas501.Entities.Reserva;
 import com.example.Reservas501.Repositories.ReservasRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -15,26 +18,27 @@ public class ReservasService {
     private ReservasRepository repository;
     private DTOUsuarioContrasena dtoUsuarioContrasena;
 
-    public String crearHotel(Hotel hotel) {
+    public String crearReserva(Reserva reserva) {
         try {
-            Hotel crearHotel = new Hotel(
-                    hotel.getNombre(),
-                    hotel.getDireccion());
-            repository.save(crearHotel);
+            Reserva crearReserva = new Reserva(
+                    reserva.getHabitacion_id(),
+                    reserva.getFecha_inicio(),
+                    reserva.getFecha_fin()
+            );
+            repository.save(crearReserva);
             return "Hotel creado con éxito";
         } catch (Exception e) {
             return "Ha habido un problema con la creación del hotel";
         }
     }
 
-    public String actualizarHotel(Hotel hotel) {
+    public String cambiarEstado(Reserva reserva) {
         try {
-            Optional<Hotel> existenteOpt = repository.findById(hotel.getHotel_id());
+            Optional<Reserva> existenteOpt = repository.findById(reserva.getReserva_id());
 
             if (existenteOpt.isPresent()) {
-                Hotel existente = existenteOpt.get();
-                existente.setNombre(hotel.getNombre());
-                existente.setDireccion(hotel.getDireccion());
+                Reserva existente = existenteOpt.get();
+                existente.setEstado(reserva.getEstado());
                 repository.save(existente);
                 return "Hotel actualizado con éxito";
             } else {
@@ -45,21 +49,7 @@ public class ReservasService {
         }
     }
 
-    public String borrarHotel(int id) {
-        try {
-            repository.deleteById(id);
-            return "Hotel eliminado con éxito";
-        } catch (Exception e) {
-            return "Ha habido un problema con la eliminacion del hotel";
-        }
-    }
 
-    public String obtenerIdAPartirDeNombre(String nombre){
-        return repository.idEmpleadosPorNombre(nombre);
-    }
 
-    public String obtenerNombreAPartirDeId(int id){
-        String nombre = repository.findById(id).get().getNombre();
-        return nombre;
-    }
+
 }

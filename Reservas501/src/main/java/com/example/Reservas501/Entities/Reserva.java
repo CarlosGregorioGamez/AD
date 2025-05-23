@@ -26,4 +26,9 @@ public class Reserva {
     private LocalDate fecha_fin;
     private String estado;
 
+    public Reserva(int habitacion_id, LocalDate fecha_inicio, LocalDate fecha_fin) {
+        this.habitacion_id = habitacion_id;
+        this.fecha_inicio = fecha_inicio;
+        this.fecha_fin = fecha_fin;
+    }
 }
