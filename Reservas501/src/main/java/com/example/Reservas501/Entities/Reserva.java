@@ -1,15 +1,11 @@
 package com.example.Reservas501.Entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 @Data
@@ -17,6 +13,9 @@ import java.util.Date;
 @AllArgsConstructor
 public class Reserva {
 
+    @ManyToOne
+    @JoinColumn(name = "habitacion_id")
+    Habitacion habitacion;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int reserva_id;
@@ -30,5 +29,10 @@ public class Reserva {
         this.habitacion_id = habitacion_id;
         this.fecha_inicio = fecha_inicio;
         this.fecha_fin = fecha_fin;
+    }
+
+    public Reserva(int reserva_id, String estado) {
+        this.reserva_id = reserva_id;
+        this.estado = estado;
     }
 }

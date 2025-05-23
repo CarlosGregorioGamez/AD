@@ -44,7 +44,7 @@ public class HotelController {
     }
 
     @PatchMapping("/hotel")
-    public ResponseEntity<String> actualizarHabitacion(@RequestBody DTOActualizarHotel hotel) {
+    public ResponseEntity<String> actualizarHotel(@RequestBody DTOActualizarHotel hotel) {
         ResponseEntity<Boolean> validacion = validarEnMicroServicioUsuarios(hotel.getNombre(), hotel.getContrasena());
         if (validacion.getStatusCode() != HttpStatus.OK || Boolean.FALSE.equals(validacion.getBody())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Fallo en la validación del usuario");

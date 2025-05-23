@@ -3,12 +3,17 @@ package com.example.Reservas501.Entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "habitacion")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Habitacion {
+
+    @OneToMany(mappedBy = "habitacion")
+    List<Reserva> reservas;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

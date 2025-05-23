@@ -6,7 +6,9 @@ import com.example.Reservas501.Entities.Hotel;
 import com.example.Reservas501.Entities.Reserva;
 import com.example.Reservas501.Repositories.ReservasRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +19,13 @@ public class ReservasService {
     @Autowired
     private ReservasRepository repository;
     private DTOUsuarioContrasena dtoUsuarioContrasena;
+    public static final String URLvalidacion = "http://localhost:8502/usuarios/validar";
+
+    private ResponseEntity<Boolean> validarEnMicroServicioUsuarios(String nombre, String contrasena) {
+        RestTemplate restTemplate = new RestTemplate();
+        DTOUsuarioContrasena usuario = new DTOUsuarioContrasena(nombre, contrasena);
+        return restTemplate.postForEntity(URLvalidacion, usuario, Boolean.class);
+    }
 
     public String crearReserva(Reserva reserva) {
         try {
@@ -50,6 +59,44 @@ public class ReservasService {
     }
 
 
+    public List<Reserva> obtenerReservasPorUsuario(String nombre, String contrasena) {
+        ResponseEntity<Boolean> validacion = validarEnMicroServicioUsuarios(nombre, contrasena);
 
+        if (Boolean.TRUE.equals(validacion.getBody())) {
+            return repository.findReservasByUsuarioNombreYContrasena(nombre, contrasena);
+        } else {
+            return List.of();
+        }
+    }
+
+    public List<Reserva> obtenerReservasPorEstado(String estado) {
+        try {
+            return repository.findReservasByEstado(estado);
+        } catch (Exception e) {
+            return List.of();
+        }
+    }
+
+    public boolean checkReserva(int idUsuario, int idHotel, int idReserva) {
+        Optional<Reserva> reservaOpt = repository.findById(idReserva);
+
+        if (reservaOpt.isEmpty()) {
+            return false;
+        }
+
+        Reserva reserva = reservaOpt.get();
+
+        // Verificamos si el usuario coincide
+        if (!(reserva.getUsuario_id() == (idUsuario))) {
+            return false;
+        }
+
+        // Verificamos si la habitación pertenece al hotel solicitado
+        if (reserva.getHabitacion() == null || !(reserva.getHabitacion().getHotel_id() == idHotel)) {
+            return false;
+        }
+
+        return reserva.getHabitacion().getHotel_id() == (idHotel);
+    }
 
 }
