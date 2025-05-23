@@ -1,7 +1,6 @@
 package com.example.Reservas501.Services;
 
 import com.example.Reservas501.DTO.DTOUsuarioContrasena;
-import com.example.Reservas501.Entities.Habitacion;
 import com.example.Reservas501.Entities.Hotel;
 import com.example.Reservas501.Repositories.HotelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,40 +21,45 @@ public class HotelService {
                     hotel.getNombre(),
                     hotel.getDireccion());
             repository.save(crearHotel);
-            return "Habitación creada con éxito";
+            return "Hotel creado con éxito";
         } catch (Exception e) {
-            return "Ha habido un problema con la creación de la habitación";
+            return "Ha habido un problema con la creación del hotel";
         }
     }
 
-    public String actualizarHabitacion(Habitacion habitacion) {
+    public String actualizarHotel(Hotel hotel) {
         try {
-            Optional<Habitacion> existenteOpt = habitacionRepository.findById(habitacion.getHabitacion_id());
+            Optional<Hotel> existenteOpt = repository.findById(hotel.getHotel_id());
 
             if (existenteOpt.isPresent()) {
-                Habitacion existente = existenteOpt.get();
-                existente.setNumero_habitacion(habitacion.getNumero_habitacion());
-                existente.setTipo(habitacion.getTipo());
-                existente.setPrecio(habitacion.getPrecio());
-                existente.setHotel_id(habitacion.getHotel_id());
-                existente.setDisponible(habitacion.isDisponible());
-
-                habitacionRepository.save(existente);
-                return "Habitación actualizada con éxito";
+                Hotel existente = existenteOpt.get();
+                existente.setNombre(hotel.getNombre());
+                existente.setDireccion(hotel.getDireccion());
+                repository.save(existente);
+                return "Hotel actualizado con éxito";
             } else {
-                return "Habitación no encontrada";
+                return "Hotel no encontrado";
             }
         } catch (Exception e) {
-            return "Ha habido un problema con la creación de la habitación";
+            return "Ha habido un problema con la actualizacion del hotel";
         }
     }
 
-    public String borrarHabitacion(int id) {
+    public String borrarHotel(int id) {
         try {
-            habitacionRepository.deleteById(id);
-            return "Habitación eliminada con éxito";
+            repository.deleteById(id);
+            return "Hotel eliminado con éxito";
         } catch (Exception e) {
-            return "Ha habido un problema con la creación de la habitación";
+            return "Ha habido un problema con la eliminacion del hotel";
         }
+    }
+
+    public String obtenerIdAPartirDeNombre(String nombre){
+        return repository.idEmpleadosPorNombre(nombre);
+    }
+
+    public String obtenerNombreAPartirDeId(int id){
+        String nombre = repository.findById(id).get().getNombre();
+        return nombre;
     }
 }

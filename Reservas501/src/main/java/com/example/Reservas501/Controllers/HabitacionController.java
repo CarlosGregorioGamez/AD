@@ -2,9 +2,12 @@ package com.example.Reservas501.Controllers;
 
 import com.example.Reservas501.DTO.DTOActualizarHabitacion;
 import com.example.Reservas501.DTO.DTOCrearHabitacion;
+import com.example.Reservas501.DTO.DTOCrearHotel;
 import com.example.Reservas501.DTO.DTOUsuarioContrasena;
 import com.example.Reservas501.Entities.Habitacion;
+import com.example.Reservas501.Entities.Hotel;
 import com.example.Reservas501.Services.HabitacionService;
+import com.example.Reservas501.Services.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +45,7 @@ public class HabitacionController {
 
     }
 
-    @PatchMapping("")
+    @PatchMapping("/habitacion")
     public ResponseEntity<String> actualizarHabitacion(@RequestBody DTOActualizarHabitacion habitacion) {
         ResponseEntity<Boolean> validacion = validarEnMicroServicioUsuarios(habitacion.getNombre(), habitacion.getContrasena());
         if (validacion.getStatusCode() != HttpStatus.OK || Boolean.FALSE.equals(validacion.getBody())) {
@@ -60,7 +63,7 @@ public class HabitacionController {
 
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/habitacion/{id}")
     public ResponseEntity<String> borrarHabitacion(@PathVariable int id, @RequestBody DTOActualizarHabitacion habitacion) {
         ResponseEntity<Boolean> validacion = validarEnMicroServicioUsuarios(habitacion.getNombre(), habitacion.getContrasena());
         if (validacion.getStatusCode() != HttpStatus.OK || Boolean.FALSE.equals(validacion.getBody())) {
@@ -69,4 +72,6 @@ public class HabitacionController {
         String response = service.borrarHabitacion(id);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+
 }
