@@ -1,17 +1,14 @@
 package com.example.Reservas501.DTO;
 
+import com.example.Reservas501.Entities.Habitacion;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DTOUsuarioContrasena implements Serializable {
+public class DTOCrearHabitacion extends Habitacion{
     private String nombre;
     private String contrasena;
-
 }
