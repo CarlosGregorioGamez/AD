@@ -10,7 +10,8 @@
     <modules> <!-- Nombre de los módulos-->
         <module>usuarios501</module>
         <module>reservas501</module>
-        <!--<module>modulo3</module> -->
+        <module>EurekaServer</module>
+        <module>ApiGateway</module>
     </modules>
     <properties> <!-- Propiedades del proyecto-->
         <java.version>17</java.version>

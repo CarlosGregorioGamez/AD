@@ -2,31 +2,26 @@ package com.example.ApiGateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.gateway.route.RouteLocator;
+import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
+import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class ApiGatewayApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ApiGatewayApplication.class, args);
-		@Bean
-		public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
-			// adding 2 rotes to first microservice as we need to log request body if method is POST
-			return builder.routes()
-					.route("primer-microservicio",r -> r.path("/primer")
-							.and().method("POST")
-							.and().readBody(Student.class, s -> true).filters(f -> f.filters(requestFilter, authFilter))
-							.uri("http://localhost:8081"))
-					.route("primer-microservicio",r -> r.path("/primer")
-							.and().method("GET").filters(f-> f.filters(authFilter))
-							.uri("http://localhost:8081"))
-					.route("segundo-microservicio",r -> r.path("/segundo")
-							.and().method("POST")
-							.and().readBody(Company.class, s -> true).filters(f -> f.filters(requestFilter, authFilter))
-							.uri("http://localhost:8082"))
-					.route("servidor-autenticacion",r -> r.path("/login")
-							.uri("http://localhost:8088"))
-					.build();
-		}
-	}
 
+}
+
+	@Bean
+	public RouteLocator customRouteLocator (RouteLocatorBuilder builder){
+		// adding 2 rotes to first microservice as we need to log request body if method is POST
+		return builder.routes()
+				.route("usuarios-service", r -> r.path("/usuarios")
+						.uri("http://localhost:8502"))
+				.route("reservas-service", r -> r.path("/reservas")
+						.uri("http://localhost:8501"))
+				.build();
+	}
 }
