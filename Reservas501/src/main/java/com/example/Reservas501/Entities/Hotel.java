@@ -19,4 +19,9 @@ public class Hotel {
     private int hotel_id;
     private String nombre;
     private String direccion;
+
+    public Hotel(String nombre, String direccion) {
+        this.nombre = nombre;
+        this.direccion = direccion;
+    }
 }

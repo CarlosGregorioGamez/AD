@@ -45,7 +45,7 @@ public class UsuariosController {
     @PostMapping("/validar")
     public ResponseEntity<Boolean> validarUsuario(@RequestBody Usuario usuario){
         boolean response = usuariosService.validarUsuario(usuario.getNombre(), usuario.getContrasena());
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/info/id/{id}")

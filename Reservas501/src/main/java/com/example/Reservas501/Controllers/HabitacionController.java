@@ -1,5 +1,6 @@
 package com.example.Reservas501.Controllers;
 
+import com.example.Reservas501.DTO.DTOActualizarHabitacion;
 import com.example.Reservas501.DTO.DTOCrearHabitacion;
 import com.example.Reservas501.DTO.DTOUsuarioContrasena;
 import com.example.Reservas501.Entities.Habitacion;
@@ -7,10 +8,7 @@ import com.example.Reservas501.Services.HabitacionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 @RestController
@@ -29,18 +27,46 @@ public class HabitacionController {
 
 
     @PostMapping("/habitacion")
-    public ResponseEntity<String> crearHabitacion(@RequestBody DTOCrearHabitacion habitacion){
+    public ResponseEntity<String> crearHabitacion(@RequestBody DTOCrearHabitacion habitacion) {
         ResponseEntity<Boolean> validacion = validarEnMicroServicioUsuarios(habitacion.getNombre(), habitacion.getContrasena());
-        if (validacion.getStatusCode() != HttpStatus.OK || Boolean.FALSE.equals(validacion.getBody())){
+        if (validacion.getStatusCode() != HttpStatus.OK || Boolean.FALSE.equals(validacion.getBody())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Fallo en la validación del usuario");
-        } else {
-            String response = service.crearHabitacion(new Habitacion(
-                    habitacion.getNumero_habitacion(),
-                    habitacion.getTipo(),
-                    habitacion.getPrecio(),
-                    habitacion.getHotel_id()
-            ));
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
         }
+        String response = service.crearHabitacion(new Habitacion(
+                habitacion.getNumero_habitacion(),
+                habitacion.getTipo(),
+                habitacion.getPrecio().doubleValue(),
+                habitacion.getHotel_id()
+        ));
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
+    }
+
+    @PatchMapping("")
+    public ResponseEntity<String> actualizarHabitacion(@RequestBody DTOActualizarHabitacion habitacion) {
+        ResponseEntity<Boolean> validacion = validarEnMicroServicioUsuarios(habitacion.getNombre(), habitacion.getContrasena());
+        if (validacion.getStatusCode() != HttpStatus.OK || Boolean.FALSE.equals(validacion.getBody())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Fallo en la validación del usuario");
+        }
+        String response = service.actualizarHabitacion(new Habitacion(
+                habitacion.getHabitacion_id(),
+                habitacion.getHotel_id(),
+                habitacion.getNumero_habitacion(),
+                habitacion.getTipo(),
+                habitacion.getPrecio(),
+                habitacion.isDisponible()
+        ));
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> borrarHabitacion(@PathVariable int id, @RequestBody DTOActualizarHabitacion habitacion) {
+        ResponseEntity<Boolean> validacion = validarEnMicroServicioUsuarios(habitacion.getNombre(), habitacion.getContrasena());
+        if (validacion.getStatusCode() != HttpStatus.OK || Boolean.FALSE.equals(validacion.getBody())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Fallo en la validación del usuario");
+        }
+        String response = service.borrarHabitacion(id);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }
